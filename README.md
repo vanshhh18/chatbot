@@ -12,6 +12,8 @@ You can try the chatbot here:
 **🌐 Website:**
 https://vanshhh18.github.io/chatbot
 
+currently only working on my server! 
+
 ---
 
 ## ✨ Features
