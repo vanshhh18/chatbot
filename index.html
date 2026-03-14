@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="UTF-8">
+<title>AI Chatbot</title>
+
+<style>
+
+body{
+font-family: Arial;
+background:#0f172a;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+margin:0;
+}
+
+.chat-container{
+width:380px;
+height:500px;
+background:#1e293b;
+border-radius:10px;
+display:flex;
+flex-direction:column;
+overflow:hidden;
+}
+
+.chat-header{
+background:#2563eb;
+color:white;
+padding:15px;
+font-weight:bold;
+text-align:center;
+}
+
+.chat-box{
+flex:1;
+padding:15px;
+overflow-y:auto;
+}
+
+.message{
+margin-bottom:10px;
+padding:10px;
+border-radius:8px;
+max-width:80%;
+}
+
+.user{
+background:#2563eb;
+color:white;
+margin-left:auto;
+}
+
+.bot{
+background:#334155;
+color:white;
+}
+
+.chat-input{
+display:flex;
+border-top:1px solid #444;
+}
+
+.chat-input input{
+flex:1;
+padding:10px;
+border:none;
+outline:none;
+}
+
+.chat-input button{
+background:#2563eb;
+color:white;
+border:none;
+padding:10px 15px;
+cursor:pointer;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="chat-container">
+
+<div class="chat-header">
+AI Assistant
+</div>
+
+<div id="chatBox" class="chat-box"></div>
+
+<div class="chat-input">
+<input id="userInput" placeholder="Type message...">
+<button onclick="sendMessage()">Send</button>
+</div>
+
+</div>
+
+<script>
+
+async function sendMessage(){
+
+let input=document.getElementById("userInput");
+let message=input.value;
+
+if(!message) return;
+
+addMessage(message,"user");
+
+input.value="";
+
+try{
+
+let response = await fetch("http://localhost:5678/webhook/chatbot",{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify({
+message:message
+})
+});
+
+let data = await response.json();
+
+addMessage(data.output || "No response from AI","bot");
+
+}catch(error){
+
+addMessage("Error connecting to AI","bot");
+
+}
+
+}
+
+function addMessage(text,type){
+
+let chatBox=document.getElementById("chatBox");
+
+let msg=document.createElement("div");
+msg.classList.add("message",type);
+msg.innerText=text;
+
+chatBox.appendChild(msg);
+
+chatBox.scrollTop=chatBox.scrollHeight;
+
+}
+
+</script>
+
+</body>
+
+</html>
